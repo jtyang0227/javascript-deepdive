@@ -1,6 +1,6 @@
 # this
-> JavaScript에서 함수의 this 키워드는 다른 언어와 조금 다르게 동작합니다. 또한 엄격 모드와 비엄격 모드에서도 일부 차이가 있습니다.
-대부분의 경우 this의 값은 함수를 호출한 방법에 의해 결정됩니다. 실행중에는 할당으로 설정할 수 없고 함수를 호출할 때 마다 다를 수 있습니다. ES5는 함수를 어떻게 호출했는지 상관하지 않고 this 값을 설정할 수 있는 bind 메서드를 도입했고, ES2015는 스스로의 this 바인딩을 제공하지 않는 화살표 함수를 추가했습니다(이는 렉시컬 컨텍스트안의 this값을 유지합니다).
+
+> JavaScript에서 함수의 this 키워드는 다른 언어와 조금 다르게 동작합니다. 또한 엄격 모드와 비엄격 모드에서도 일부 차이가 있습니다. 대부분의 경우 this의 값은 함수를 호출한 방법에 의해 결정됩니다. 실행중에는 할당으로 설정할 수 없고 함수를 호출할 때 마다 다를 수 있습니다. ES5는 함수를 어떻게 호출했는지 상관하지 않고 this 값을 설정할 수 있는 bind 메서드를 도입했고, ES2015는 스스로의 this 바인딩을 제공하지 않는 화살표 함수를 추가했습니다(이는 렉시컬 컨텍스트안의 this값을 유지합니다).
 
 ```javascript
 // 객체 리터럴
@@ -14,6 +14,7 @@ const circle = {
 
 console.log(circle.getDiameter()); // 10
 ```
+
 * 객체 리터럴의 메서드 내부에서는 `this`는 메서드를 호출한 객체, circle 가리킨다.
 
 ```javascript
@@ -33,6 +34,7 @@ Circle.prototype.getDiameter = function () {
 const circle = new Circle(5);
 console.log(circle.getDiameter()); // 10
 ```
+
 * 생성자 함수 내부의 this는 생성자 함수가 생성한 인스턴스를 가리킨다. 이처럼 this는 상황에 따라 가르키는 대상이 다릅니다.
 
 ### 자바스크립트의 `this`는 함수가 호출되는 방식에 따라 `this`에 바인딩될 값. 즉 `this binding`이 동적으로 결정됩니다. 또한 `strct mode`(엄격모드) 역시 this 바인딩에 영향을 줍니다.
@@ -47,6 +49,7 @@ function square(number) {
   console.log(this); // window
   return number * number;
 }
+
 square(2);
 
 const person = {
@@ -69,10 +72,13 @@ const me = new Person('yang');
 ```
 
 ## 함수 호출 방식과 this 바인딩
+
 ### this 바인딩은 함수 호출 방식, 즉 함수가 어떻게 호출되었는지에 따라 동적으로 결정됩니다.
+
 * 바인딩(binding) : 식별자와 값을 연결하는 과정입니다.
 
 #### 함수 호출하는 방식
+
 1. 일반 함수 호츌
 2. 메서드 호출
 3. 생성자(new) 함수 호출
@@ -94,7 +100,7 @@ foo(); // window
 // 2. 메서드 호출
 // foo 함수를 프로퍼티 값으로 할당하여 호출
 // foo 함수 내부의 this는 메서드를 호출한 객체 obj를 가리킨다.
-const obj = { foo };
+const obj = {foo};
 obj.foo(); // obj
 
 // 3. 생성자 함수 호출
@@ -104,7 +110,7 @@ new foo(); // foo {}
 
 // 4. Function.prototype.apply/call/bind 메서드에 의한 간접 호출
 // foo 함수 내부의 this는 인수에 의해 결정된다.
-const bar = { name: 'bar' };
+const bar = {name: 'bar'};
 
 foo.call(bar);   // bar
 // call() : 메소드는 주어진 this 값 및 각각 전달된 인수와 함께 함수를 호출합니다.
@@ -117,6 +123,7 @@ foo.bind(bar)(); // bar
 ```
 
 ## 일반 함수 호출
+
 ```javascript
 // 22-07
 function foo() {
@@ -124,10 +131,13 @@ function foo() {
   function bar() {
     console.log("bar's this: ", this); // window
   }
+
   bar();
 }
+
 foo();
 ```
+
 * 위 예제(22-07)는 전역 함수, 중첨 함수를 일반 함수로 호출하면 함수 내부의 `this`에 전역 객체가 바인딩됩니다.
 
 > `this`는 객체의 프로퍼티, 메서드를 참조하기 위한 자기 참조 변수이므로 객체 생성하지 않는 일반 함수에서 `this`는 의마가 없습니다. 따라서 다음 예제(22-08)처럼 strict mode가 적용된 일반 함수 내부의 `this`에 `undefined`가 바인딩 됩니다.
@@ -141,21 +151,26 @@ function foo() {
   function bar() {
     console.log("bar's this: ", this); // undefined
   }
+
   bar();
 }
+
 foo();
 ```
+
 ---
+
 ```javascript
 // 22-09
 // var 키워드로 선언한 전역 변수 value는 전역 객체의 프로퍼티다.
-var value = 1;
+var value =
+  1;
 // const 키워드로 선언한 전역 변수 value는 전역 객체의 프로퍼티가 아니다.
 // const value = 1;
 
 const obj = {
   value: 100,
-  
+
   foo() {
     console.log("foo's this: ", this);  // {value: 100, foo: ƒ}
     console.log("foo's this.value: ", this.value); // 100
@@ -174,6 +189,7 @@ const obj = {
 
 obj.foo();
 ```
+
 * 콜백 함수가 일반 함수로 호출된다면 콜백 함수 내부의 `this`에도 전역 객체가 바인딩됩니다. 어떠한 함수라도 일반 함수로 호출되면 `this`에 전역 객체가 바인딩 됩니다.
 
 ```javascript
@@ -184,7 +200,7 @@ const obj = {
   value: 100,
   foo() {
     console.log("foo's this: ", this); // {value: 100, foo: ƒ}
-    
+
     // 콜백 함수 내부의 this에는 전역 객체가 바인딩된다.
     setTimeout(function () {
       console.log("callback's this: ", this); // window
@@ -197,6 +213,7 @@ obj.foo();
 ```
 
 ## setTimeout
+
 * 메서드는 만료된 후 함수나 지정한 코드 조각을 실행하는 타이머를 설정합니다.
 
 ```javascript
@@ -246,6 +263,7 @@ obj.foo();
 ```
 
 ## 메서드 호출
+
 ```javascript
 // 22-14
 const person = {
@@ -275,10 +293,9 @@ const getName = person.getName;
 // getName 메서드를 일반 함수로 호출
 console.log(getName()); // ''
 ```
-* 일반 함수로 호출된 getName 함수 내부의 this.name은 브라우저 환경에서 window.name과 같다.
-  브라우저 환경에서 window.name은 브라우저 창의 이름을 나타내는 빌트인 프로퍼티이며 기본값은 ''이다.
-  Node.js 환경에서 this.name은 undefined다.
 
+* 일반 함수로 호출된 getName 함수 내부의 this.name은 브라우저 환경에서 window.name과 같다. 브라우저 환경에서 window.name은 브라우저 창의 이름을 나타내는 빌트인 프로퍼티이며
+  기본값은 ''이다. Node.js 환경에서 this.name은 undefined다.
 
 ```javascript
 // 22-16
@@ -304,13 +321,14 @@ console.log(Person.prototype.getName()); // jetty
 ```
 
 ## 생성자 함수 호출
+
 ```javascript
 // 22-17
 // 생성자 함수
 function Circle(radius) {
   // 생성자 함수 내부의 this는 생성자 함수가 생성할 인스턴스를 가리킨다.
   this.radius = radius;
-  
+
   this.getDiameter = function () {
     return 2 * this.radius;
   };
@@ -330,7 +348,9 @@ console.log(circle2.getDiameter()); // 20
 ```
 
 ## Function.prototype.apply/call/bind 메서드의 의한 간접 호출
+
 * apply, call, bind 메서드는 Function.prototype 메서드입니다. 즉 메서드는 모든 함수가 상속받아 사용할 수 있습니다.
+
 ```javascript
 // 22-18
 // new 연산자와 함께 호출하지 않으면 생성자 함수로 동작하지 않는다. 즉, 일반적인 함수의 호출이다.
@@ -348,7 +368,7 @@ function getThisBinding() {
 }
 
 // this로 사용할 객체
-const thisArg = { a: 1 };
+const thisArg = {a: 1};
 
 console.log(getThisBinding()); // window
 
@@ -363,7 +383,7 @@ function getThisBinding() {
 }
 
 // this로 사용할 객체
-const thisArg = { a: 1 };
+const thisArg = {a: 1};
 
 // getThisBinding 함수를 호출하면서 인수로 전달한 객체를 getThisBinding 함수의 this에 바인딩한다.
 // apply 메서드는 호출할 함수의 인수를 배열로 묶어 전달한다.
@@ -375,9 +395,9 @@ console.log(getThisBinding.apply(thisArg, [1, 2, 3]));
 console.log(getThisBinding.call(thisArg, 1, 2, 3));
 // Arguments(3) [1, 2, 3, callee: ƒ, Symbol(Symbol.iterator): ƒ]
 ```
+
 * `apply` : 호출할 함수의 인수(`Array`)로 전달합니다.
 * `call` : 호출하는 함수의 인수(`List`) 전달합니다.
-
 
 ```javascript
 // 22-21
@@ -401,7 +421,7 @@ function getThisBinding() {
 }
 
 // this로 사용할 객체
-const thisArg = { a: 1 };
+const thisArg = {a: 1};
 
 // bind 메서드는 첫 번째 인수로 전달한 thisArg로 this 바인딩이 교체된
 // getThisBinding 함수를 새롭게 생성해 반환한다.
@@ -440,7 +460,8 @@ person.foo(function () {
 ```
 
 ## 함수 호출 방식 : this 바인딩
-* 일반 함수 호출 : 전역 객체 
-* 메소드 호출 : 메서드를 호출한 객체 
-* 생성자 함수 호출 :생성자 함수가 생성할 인스턴스 
+
+* 일반 함수 호출 : 전역 객체
+* 메소드 호출 : 메서드를 호출한 객체
+* 생성자 함수 호출 :생성자 함수가 생성할 인스턴스
 * Function.prototype.apply/call/bind 메서드의 의한 간접 호출 : Function.prototype.apply/call/bind 메서드에 첫번째 인수로 전달한 객체
